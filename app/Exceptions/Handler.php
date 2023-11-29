@@ -3,7 +3,10 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+<<<<<<< HEAD
 use Illuminate\Http\Request;
+=======
+>>>>>>> 1e3d2044a7dad1701ef2926ebff12b3bb07fa61e
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -24,6 +27,7 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
+<<<<<<< HEAD
         $this->renderable(function (Throwable $e, Request $request) {
             if($request->is('api/*')){
                 return response()->json([
@@ -33,6 +37,10 @@ class Handler extends ExceptionHandler
                 ],
                 500);
             }
+=======
+        $this->reportable(function (Throwable $e) {
+            //
+>>>>>>> 1e3d2044a7dad1701ef2926ebff12b3bb07fa61e
         });
     }
 }
