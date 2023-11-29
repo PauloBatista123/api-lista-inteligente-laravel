@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Importacao;
+namespace App\Http\Requests\Produto;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Validation\Rules\File;
 
-class UploadRequest extends FormRequest
+class CriarNovoProdutoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +23,7 @@ class UploadRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'arquivo' => 'required', File::types('application/vnd.ms-excel application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
-            'grupo' => 'exclude_if:lista,cooperado|exists:App\Models\Lista,id',
+            'descricao' => 'required',
         ];
     }
 
@@ -33,11 +31,10 @@ class UploadRequest extends FormRequest
 
         if($validator->fails()){
             throw new HttpResponseException(response()->json([
-                'message' => 'Ops! Algum campo não foi preenchido corretamente!',
+                'msg' => 'Ops! Algum campo não foi preenchido corretamente!',
                 'status' => false,
                 'errors' => $validator->errors(),
             ], 404));
         }
-
     }
 }

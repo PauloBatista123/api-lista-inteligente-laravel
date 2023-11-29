@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Imtigger\LaravelJobStatus\Trackable;
@@ -82,7 +83,7 @@ class CooperadoImport implements ToCollection, WithHeadingRow, ShouldQueue, With
 
             $cpfReplace = str_replace('-', '', $row['cpfcnpj']);
 
-            $documento = Cooperado::updateOrCreate(
+            DB::table('cooperados')->updateOrInsert(
                 [
                     'cpf_cnpj' => $row['cpfcnpj'],
                 ],
@@ -93,8 +94,8 @@ class CooperadoImport implements ToCollection, WithHeadingRow, ShouldQueue, With
                     'telefone_residencial' => $row['telefoneresidencial'] ?? null,
                     'endereco' => $row['endereco'] ?? null,
                     'cidade' => $row['cidade'] ?? null,
-                    'sigla' => (float) $row['sigla'] ?? null,
-                    'renda' => $row['renda'] ?? null,
+                    'sigla' => $row['sigla'] ?? null,
+                    'renda' => (float) $row['renda'] ?? null,
                     'uf' => $row['uf'] ?? null,
                     'ponto_atendimento_id' => $pontoAtendimento->id,
                 ],
@@ -124,6 +125,6 @@ class CooperadoImport implements ToCollection, WithHeadingRow, ShouldQueue, With
 
     public function chunkSize(): int
     {
-        return 1000;
+        return 5000;
     }
 }

@@ -68,11 +68,10 @@ class ImportacaoService {
      *
      * Função responsável por disparar o trabalho para a fila
      *
-     * @param Type $var Description
-     * @return type
-     * @throws conditon
+     * @param string $tabela Tabela se refere ao produto
+     * @param ?int $grupoId Referente ao grupo
      **/
-    public function processarArquivo($file, string $tabela, ?int $listaId)
+    public function processarArquivo($file, string $tabela, ?int $grupoId)
     {
         if($tabela !== TabelaProdutos::COOPERADO->value){
             $produtoId = Produto::where('nome', $tabela)->first()->id;
@@ -83,16 +82,16 @@ class ImportacaoService {
                 (new CooperadoImport)->import($file);
                 break;
             case TabelaProdutos::CARTAO->value:
-                (new ProdutoCartaoImport($produtoId, $listaId))->import($file);
+                (new ProdutoCartaoImport($produtoId, $grupoId))->import($file);
                 break;
             case TabelaProdutos::COOPERADO_SEM_LIMITE->value:
-                (new ProdutoCooperadoSemLimiteImport($produtoId, $listaId))->import($file);
+                (new ProdutoCooperadoSemLimiteImport($produtoId, $grupoId))->import($file);
                 break;
             case TabelaProdutos::COOPERADO_COM_LIMITE_E_BLOQUEIO->value:
-                (new ProdutoCooperadoComLimiteBloqueioImport($produtoId, $listaId))->import($file);
+                (new ProdutoCooperadoComLimiteBloqueioImport($produtoId, $grupoId))->import($file);
                 break;
             case TabelaProdutos::LIMITES_COOPERADO_SEM_LIMITE->value:
-                (new ProdutoLimiteCooperadoSemLimiteImport($produtoId, $listaId))->import($file);
+                (new ProdutoLimiteCooperadoSemLimiteImport($produtoId, $grupoId))->import($file);
                 break;
             default:
                 throw new Exception("Não encontramos uma tabela válida");

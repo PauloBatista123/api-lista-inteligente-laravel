@@ -13,9 +13,9 @@ class Produto extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nome', 'descricao'];
+    protected $fillable = ['nome', 'descricao', 'status'];
 
-    protected $hidden = ['cooperado_id', 'ponto_atendimento_id', 'produto_id', 'model'];
+    protected $hidden = ['cooperado_id', 'ponto_atendimento_id', 'produto_id', 'model', 'pivot'];
 
     public function countCartao()
     {

@@ -9,5 +9,5 @@ class PontoAtendimento extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nome', 'pa', 'cidade'];
+    protected $fillable = ['nome', 'pa', 'cidade', 'id'];
 }

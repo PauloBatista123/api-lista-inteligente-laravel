@@ -6,7 +6,10 @@ use App\Http\Resources\CooperadoCollection;
 use App\Http\Resources\CooperadoResource;
 use App\Http\Services\CooperadoService;
 use App\Models\Cooperado;
+use App\Models\Lista;
+use App\Models\ListaItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CooperadoController extends Controller
 {
@@ -25,8 +28,9 @@ class CooperadoController extends Controller
     public function buscar(Request $request)
     {
         try {
-            $cooperado = Cooperado::with(['cartoesLimiteFabrica'])->when($request->get('nome'), function($query) use ($request) {
-                $query->where('nome', '%'.$request->get('nome').'%');
+            $cooperado = Cooperado::has('produtos')
+            ->when($request->get('nome'), function($query) use ($request) {
+                $query->where('nome', 'like','%'.$request->get('nome').'%');
             })
             ->when($request->get('sigla'), function($query) use ($request) {
                 $query->where('sigla', $request->get('sigla'));
@@ -64,5 +68,23 @@ class CooperadoController extends Controller
         }catch(\Exception $e){
             return response()->json(['message' => $e->getMessage()], 500);
         }
+    }
+
+    /**
+     * Função para agrupar as listas e quantidades
+     *
+     * @return Response
+     **/
+    public function summary(string $id)
+    {
+        $produtos = DB::table('lista_items as li')
+                        ->join('produtos', 'li.produto_id', '=', 'produtos.id')
+                        ->select('produtos.descricao', DB::raw('count(li.id) as quantidade'))
+                        ->where('cooperado_id', $id)
+                        ->whereNotIn('li.status', Lista::STATUS_FINALIZADO)
+                        ->groupBy('li.produto_id')
+                        ->get();
+
+        return response()->json($produtos);
     }
 }

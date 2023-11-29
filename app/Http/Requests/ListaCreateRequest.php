@@ -24,7 +24,6 @@ class ListaCreateRequest extends FormRequest
     {
         return [
             'tag' => 'required|max:50',
-            'produto_id' => 'required|exists:App\Models\Produto,id',
             'prazo_final' => 'required|date|after:tomorrow'
         ];
     }
@@ -33,7 +32,6 @@ class ListaCreateRequest extends FormRequest
     {
         return [
             'tag.required' => 'O campo tag é obrigatório',
-            'produto_id.required' => 'O campo produto é obrigatório',
             'prazo_final.required' => 'O campo prazo final é obrigatório',
             'prazo_final.after' => 'O prazo final deve ser maior que a data de hoje'
         ];

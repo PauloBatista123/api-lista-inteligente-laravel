@@ -138,6 +138,6 @@ class ProdutoCooperadoSemLimiteImport implements ToCollection, WithHeadingRow, S
 
     public function chunkSize(): int
     {
-        return 1000;
+        return 5000;
     }
 }

@@ -60,9 +60,9 @@ class ProdutoService {
     {
         $registro = $this->buscarItemPorId($registroId);
 
-        return $registro->update([
-            'tipo_contato' => $tipoContato
-        ]);
+        $registro->tipo_contato = $tipoContato;
+
+        $registro->save();
     }
 
     public function getModelClass($tabela)

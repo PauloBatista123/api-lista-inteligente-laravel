@@ -49,12 +49,12 @@ class ImportacaoController extends Controller
     {
         try{
 
-            $this->importacaoService->validarHeaderArquivo($request->file('arquivo'), $request->get('tabela'));
+            $this->importacaoService->validarHeaderArquivo($request->file('arquivo'), $request->get('lista'));
 
             $this->importacaoService->processarArquivo(
                 $request->file('arquivo'),
-                $request->get(('tabela')),
                 $request->get('lista'),
+                $request->get('grupo'),
             );
 
             return response()->json(['message' => 'Arquivo enviado para processamento']);

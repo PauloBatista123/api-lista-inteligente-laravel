@@ -9,10 +9,13 @@ class Lista extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['tag', 'produto_id', 'prazo_final'];
+    public const STATUS_FINALIZADO = ['finalizado_contratado','finalizado_nao_contratado','finalizado_nao_localizado','finalizado_indeferido'];
+    public const STATUS_PENDENTE = ['pendente_retornar_contato','pendente_atualizacao_cadastral','pendente_proposta_em_analise','pendente_formalizacao'];
 
-    public function produto()
+    protected $fillable = ['tag', 'prazo_final', 'status'];
+
+    public function produtos()
     {
-        return $this->belongsTo(Produto::class, 'produto_id', 'id');
+        return $this->belongsToMany(Produto::class, 'produto_lista');
     }
 }

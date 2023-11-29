@@ -2,8 +2,7 @@
 
 namespace App\Http\Resources;
 
-use App\Http\Resources\Produtos\Cartao\CartaoCollection;
-use App\Http\Resources\Produtos\Cartao\CartaoResource;
+use App\Http\Resources\Cooperado\ProdutoResource;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -33,7 +32,7 @@ class CooperadoResource extends JsonResource
             'uf' => $this->uf,
             'renda' => number_format($this->renda, 2, ',', '.'),
             'sigla' => $this->sigla,
-            'cartoes' => CartaoResource::collection($this->cartoesLimiteFabrica),
+            'produtos' => ProdutoResource::collection($this->produtos),
             'ponto_atendimento' => $this->pontoAtendimento,
             'created_at' => Carbon::parse($this->created_at)->format('d/m/Y H:i:s'),
             'updated_at' => Carbon::parse($this->updated_at)->format('d/m/Y H:i:s'),

@@ -8,6 +8,7 @@ use App\Http\Controllers\HistoricoController;
 use App\Http\Controllers\ImportacaoController;
 use App\Http\Controllers\LimitesCooperadoSemLimiteImplantadoController;
 use App\Http\Controllers\ListaController;
+use App\Http\Controllers\PontoAtendimentoController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Interfaces\TabelaProdutos;
 use App\Models\Produto;
@@ -38,11 +39,22 @@ Route::post('historico', [HistoricoController::class, 'criar']);
 
 Route::get('cooperado', [CooperadoController::class, 'buscar']);
 Route::get('cooperado/{id}', [CooperadoController::class, 'buscarPorId']);
+Route::get('cooperado/summary/{id}', [CooperadoController::class, 'summary']);
 
 Route::put('produto/tipo-contato/{id}', [ProdutoController::class, 'alterarTipoContato']);
 Route::get('produtos/itens/{id}', [ProdutoController::class, 'buscarPorId']);
 Route::get('produtos/itens', [ProdutoController::class, 'listar']);
 Route::get('produtos', [ProdutoController::class, 'listas']);
+Route::post('produtos', [ProdutoController::class, 'criar']);
+Route::put('produtos/status/{id}', [ProdutoController::class, 'alterarStatus']);
+Route::put('produtos/{id}', [ProdutoController::class, 'alterar']);
 
-Route::get('listas', [ListaController::class, 'listar']);
-Route::post('listas', [ListaController::class, 'criar']);
+Route::get('grupos', [ListaController::class, 'listar']);
+Route::get('grupos/{id}', [ListaController::class, 'detalhar']);
+Route::post('grupos', [ListaController::class, 'criar']);
+Route::put('grupos/status/{id}', [ListaController::class, 'alterarStatus']);
+Route::post('grupos/produtos/{id}', [ListaController::class, 'vincularProdutos']);
+Route::put('grupos/{id}', [ListaController::class, 'alterar']);
+
+Route::get('ponto-atendimento', [PontoAtendimentoController::class, 'listar']);
+Route::post('ponto-atendimento', [PontoAtendimentoController::class, 'cadastrar']);

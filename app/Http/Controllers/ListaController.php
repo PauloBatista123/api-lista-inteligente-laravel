@@ -2,17 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Interfaces\TabelaProdutos;
 use App\Http\Requests\ListaCreateRequest;
 use App\Http\Resources\ListaCollection;
+use App\Http\Resources\ListaResource;
 use App\Http\Services\ListaService;
 use App\Models\Lista;
 use Illuminate\Http\Request;
-use App\Models\Produto;
-use App\Models\Produto\Cartao;
-use App\Models\Produto\CooperadoComLimiteEBloqueio;
-use App\Models\Produto\CooperadoSemLimiteImplantado;
-use App\Models\Produto\Limites\LimitesCooperadoSemLimiteImplantado;
 use Illuminate\Http\Response;
 
 class ListaController extends Controller
@@ -23,41 +18,91 @@ class ListaController extends Controller
      * Listar as listas no sistema
      *
      *
-     * @param Type $var Description
-     * @return type
-     * @throws conditon
+     * @param Request $var Description
+     * @return Response
      **/
     public function listar(Request $request)
     {
-        try {
 
-            $itens = Lista::with(['produto'])->paginate(10);
+        $itens = Lista::with(['produtos'])->paginate(10);
 
-            return new ListaCollection($itens);
+        return new ListaCollection($itens);
 
-        } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
-        }
+    }
+
+     /**
+     * Detalhes de uma lista
+     *
+     *
+     * @param string $id Description
+     * @return Response
+     **/
+    public function detalhar(string $id)
+    {
+        $lista = $this->listaService->buscarPorId($id);
+        return new ListaResource($lista->load('produtos'));
     }
 
     /**
-     * undocumented function summary
+     * Criar uma nova Lista
      *
-     * Undocumented function long description
      *
-     * @param Type $var Description
-     * @return type
-     * @throws conditon
+     * @param ListaCreateRequest $request
+     * @return Response
      **/
     public function criar(ListaCreateRequest $request)
     {
-        try {
-            $this->listaService->salvar($request->get('tag'), $request->get('prazo_final'), $request->get('produto_id'));
+        $this->listaService->salvar($request->get('tag'), $request->get('prazo_final'));
 
-            return response('', Response::HTTP_OK);
+        return response('', Response::HTTP_CREATED);
+    }
 
-        } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
-        }
+
+    /**
+     * Alterar status de um grupo especifico
+     *
+     *
+     * @param string $id
+     * @return Response
+     **/
+    public function alterarStatus(Request $request, string $id)
+    {
+        $lista = $this->listaService->buscarPorId($id);
+
+        $this->listaService->alterarStatus($lista, $request->get('status'));
+
+        return response('', Response::HTTP_OK);
+    }
+
+    /**
+     * Vinular listas ao grupo
+     *
+     *
+     * @param string $id
+     * @return Response
+     **/
+    public function vincularProdutos(Request $request, string $id)
+    {
+        $lista = $this->listaService->buscarPorId($id);
+
+        $this->listaService->vincularProdutos($lista, (array) $request->get('produtos'));
+
+        return response('', Response::HTTP_OK);
+    }
+
+    /**
+     * Alterar informações do grupo
+     *
+     *
+     * @param string $id
+     * @return Response
+     **/
+    public function alterar(Request $request, string $id)
+    {
+        $lista = $this->listaService->buscarPorId($id);
+
+        $this->listaService->atualizarDados($lista, $request->get('tag'), $request->get('prazo_final'), $request->get('status'));
+
+        return response('', Response::HTTP_OK);
     }
 }
